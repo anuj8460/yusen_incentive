@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Incentives & Expenses</title>
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Colors from Design Spec */
+            --color-primary: #1A2B48;
+            /* Deep Navy */
+            --color-accent: #2196F3;
+            /* Material Blue */
+            --color-bg-page: #F5F5F7;
+            /* Light Grey Background */
+            --color-bg-surface: #FFFFFF;
+            /* White */
+            --color-text-primary: #212121;
+            /* Almost Black */
+            --color-text-secondary: #757575;
+            /* Medium Grey */
+            --color-divider: #EEEEEE;
+
+            /* Status Colors */
+            --color-status-success-bg: #E8F5E9;
+            --color-status-success-text: #2E7D32;
+            --color-status-pending-bg: #E3F2FD;
+            /* Matches "Pending" reference */
+            --color-status-pending-text: #1565C0;
+            --color-status-rejected-bg: #FFEBEE;
+            --color-status-rejected-text: #C62828;
+
+            /* Spacing */
+            --spacing-unit: 8px;
+            --screen-padding: 16px;
+            --card-radius: 8px;
+        }
+
+        /* Reset & Base */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--color-bg-page);
+            color: var(--color-text-primary);
+            padding-bottom: 40px;
+            /* Bottom spacing */
+        }
+
+        h1,
+        h2,
+        h3,
+        p {
+            margin: 0;
+        }
+
+        /* Typography Utilities */
+        .text-hero {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .text-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--color-text-primary);
+        }
+
+        .text-subtitle {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--color-text-secondary);
+        }
+
+        .text-label {
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .text-amount {
+            font-size: 16px;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .fw-bold {
+            font-weight: 700;
+        }
+
+        .text-white {
+            color: white;
+        }
+
+        .text-white-opacity {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        /* Layout Structure */
+        .container {
+            max-width: 600px;
+            /* Mobile-first, but capped for desktop view */
+            margin: 0 auto;
+            background-color: var(--color-bg-page);
+            min-height: 100vh;
+        }
+
+        /* 1. Header */
+        .header {
+            background-color: var(--color-bg-surface);
+            padding: 12px var(--screen-padding);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 0 var(--color-divider);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+        }
+
+        .back-btn {
+            color: var(--color-text-primary);
+            cursor: pointer;
+        }
+
+        .filter-pill {
+            background-color: #F0F0F0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--color-text-primary);
+        }
+
+        .action-icons {
+            display: flex;
+            gap: 16px;
+            color: var(--color-accent);
+        }
+
+        /* 2. Hero Section */
+        .hero-section {
+            padding: var(--screen-padding);
+        }
+
+        .hero-card {
+            background-color: var(--color-primary);
+            border-radius: var(--card-radius);
+            padding: 24px;
+            text-align: left;
+            box-shadow: 0 4px 12px rgba(26, 43, 72, 0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        /* 3. Summary Stats */
+        .summary-card {
+            background-color: var(--color-bg-surface);
+            border-radius: var(--card-radius);
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            margin: 0 var(--screen-padding);
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .stat-item:first-child {
+            text-align: left;
+        }
+
+        .stat-item:last-child {
+            text-align: right;
+        }
+
+        .stat-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 10%;
+            height: 80%;
+            width: 1px;
+            background-color: var(--color-divider);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--color-text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--color-text-primary);
+        }
+
+        .text-green {
+            color: var(--color-status-success-text);
+        }
+
+        .text-blue {
+            color: var(--color-status-pending-text);
+        }
+
+        /* 4. Tabs */
+        .tabs-container {
+            margin-top: 16px;
+            background-color: var(--color-bg-surface);
+            padding: 0 var(--screen-padding);
+            box-shadow: 0 1px 0 var(--color-divider);
+            display: flex;
+            gap: 24px;
+            overflow-x: auto;
+            /* Horizontal scroll if needed */
+            scrollbar-width: none;
+        }
+
+        .tabs-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab {
+            padding: 16px 4px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .tab.active {
+            color: var(--color-accent);
+            font-weight: 700;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--color-accent);
+            border-radius: 3px 3px 0 0;
+        }
+
+        /* 5. Expense List */
+        .list-container {
+            padding: 16px var(--screen-padding);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .expense-card {
+            background-color: var(--color-bg-surface);
+            border-radius: var(--card-radius);
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid transparent;
+            transition: transform 0.1s;
+        }
+
+        .expense-card:active {
+            transform: scale(0.99);
+            /* Subtle touch feedback */
+        }
+
+        .card-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+
+
+        .category-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .cat-icon {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        /* Badges */
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge.pending {
+            background-color: var(--color-status-pending-bg);
+            color: var(--color-status-pending-text);
+        }
+
+        .badge.approved {
+            background-color: var(--color-status-success-bg);
+            color: var(--color-status-success-text);
+        }
+
+        .badge.rejected {
+            background-color: var(--color-status-rejected-bg);
+            color: var(--color-status-rejected-text);
+        }
+
+        /* Responsive Adjustments */
+        @media (min-width: 480px) {
+            .hero-card {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                text-align: left;
+            }
+
+            .list-container {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Top Bar -->
+        <header class="header">
+            <div class="header-title-row">
+                <span class="material-icons back-btn">arrow_back</span>
+                <!-- Date Filter Dropdown -->
+                <div class="filter-pill" style="position: relative; padding: 0; overflow: hidden;">
+                    <span class="material-icons"
+                        style="font-size: 18px; position: absolute; left: 12px; pointer-events: none;">calendar_today</span>
+                    <select id="monthFilter"
+                        style="appearance: none; -webkit-appearance: none; border: none; background: transparent; padding: 8px 32px 8px 36px; font-size: 14px; font-weight: 500; font-family: inherit; color: var(--color-text-primary); outline: none;">
+                        <option value="Dec 2025">December 2025</option>
+                        <option value="Nov 2025">November 2025</option>
+                        <option value="Oct 2025">October 2025</option>
+                    </select>
+                    <span class="material-icons"
+                        style="font-size: 16px; position: absolute; right: 8px; pointer-events: none;">arrow_drop_down</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Search Bar -->
+        <div style="padding: 0 var(--screen-padding) 16px;">
+            <div
+                style="background: white; border-radius: 8px; padding: 10px 16px; display: flex; align-items: center; gap: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <span class="material-icons" style="color: var(--color-text-secondary);">search</span>
+                <input type="text" id="expenseSearch" placeholder="Search Expense Type..."
+                    style="border: none; outline: none; font-size: 14px; width: 100%; font-family: inherit;">
+            </div>
+        </div>
+
+        <!-- Hero Cards -->
+        <section class="hero-section" style="padding-top: 0;">
+            <div class="hero-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <div>
+                        <div class="text-label text-white-opacity">Total Incentive Earned</div>
+                        <div class="text-hero" id="totalIncentive">RM 1,250.00</div>
+                    </div>
+                </div>
+                <div class="text-subtitle text-white-opacity" style="font-size: 12px; margin-top: 8px;">
+                    <span id="periodLabel">Dec 01 - Dec 31</span> • Branch: KUL (Kuala Lumpur)
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="stat-item">
+                    <div class="stat-label">Submitted</div>
+                    <div class="stat-value" id="valSubmitted">RM 1,450</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Approved</div>
+                    <div class="stat-value text-green" id="valApproved">RM 300</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Pending</div>
+                    <div class="stat-value text-blue" id="valPending">RM 650</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation Tabs -->
+        <nav class="tabs-container">
+            <div class="tab active" onclick="filterStatus('all', this)">All</div>
+            <div class="tab" onclick="filterStatus('pending', this)">Pending <span id="countPending">(3)</span></div>
+            <div class="tab" onclick="filterStatus('approved', this)">Approved <span id="countApproved">(2)</span></div>
+            <div class="tab" onclick="filterStatus('rejected', this)">Rejected <span id="countRejected">(2)</span></div>
+        </nav>
+
+        <!-- Content List -->
+        <main class="list-container" id="expenseList">
+
+            <!-- DEC DATA -->
+            <article class="expense-card item" data-status="pending" data-type="Toll Charges" data-month="Dec 2025"
+                data-amount="45">
+                <div class="card-row">
+                    <div class="text-title">Toll Charges</div>
+                    <div class="text-amount">RM 45.00</div>
+                </div>
+                <div class="card-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div class="text-subtitle">
+                        <div style="margin-bottom: 4px;">Dec 08, 2025</div>
+                        <div class="category-row">
+                            <span class="material-icons cat-icon">commute</span>
+                            <span>Toll</span>
+                        </div>
+                    </div>
+                    <div class="badge pending">Pending</div>
+                </div>
+            </article>
+
+            <article class="expense-card item" data-status="pending" data-type="Vehicle Repair" data-month="Dec 2025"
+                data-amount="350">
+                <div class="card-row">
+                    <div class="text-title">Vehicle Repair - Minor</div>
+                    <div class="text-amount">RM 350.00</div>
+                </div>
+                <div class="card-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div class="text-subtitle">
+                        <div style="margin-bottom: 4px;">Dec 05, 2025</div>
+                        <div class="category-row">
+                            <span class="material-icons cat-icon">build</span>
+                            <span>Vehicle Repair</span>
+                        </div>
+                    </div>
+                    <div class="badge pending">Pending</div>
+                </div>
+            </article>
+
+            <article class="expense-card item" data-status="pending" data-type="Loading Charges" data-month="Dec 2025"
+                data-amount="255">
+                <div class="card-row">
+                    <div class="text-title">Loading Charges</div>
+                    <div class="text-amount">RM 255.00</div>
+                </div>
+                <div class="card-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div class="text-subtitle">
+                        <div style="margin-bottom: 4px;">Dec 09, 2025</div>
+                        <div class="category-row">
+                            <span class="material-icons cat-icon">local_shipping</span>
+                            <span>Loading</span>
+                        </div>
+                    </div>
+                    <div class="badge pending">Pending</div>
+                </div>
+            </article>
+
+            <article class="expense-card item" data-status="approved" data-type="Unloading Charges"
+                data-month="Dec 2025" data-amount="120">
+                <div class="card-row">
+                    <div class="text-title">Unloading Charges at Warehouse</div>
+                    <div class="text-amount">RM 120.00</div>
+                </div>
+                <div class="card-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div class="text-subtitle">
+                        <div style="margin-bottom: 4px;">Dec 07, 2025</div>
+                        <div class="category-row">
+                            <span class="material-icons cat-icon">archive</span>
+                            <span>Unloading Charges</span>
+                        </div>
+                    </div>
+                    <div class="badge approved">Approved</div>
+                </div>
+            </article>
+
+            <article class="expense-card item" data-status="approved" data-type="Parking Charges" data-month="Dec 2025"
+                data-amount="180">
+                <div class="card-row">
+                    <div class="text-title">Parking at Depot</div>
+                    <div class="text-amount">RM 180.00</div>
+                </div>
+                <div class="card-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div class="text-subtitle">
+                        <div style="margin-bottom: 4px;">Dec 06, 2025</div>
+                        <div class="category-row">
+                            <span class="material-icons cat-icon">local_parking</span>
+                            <span>Parking</span>
+                        </div>
+                    </div>
+                    <div class="badge approved">Approved</div>
+                </div>
+            </article>
+
+            <article class="expense-card item" data-status="rejected" data-type="Challan / Fine" data-month="Dec 2025"
+                data-amount="500">
+                <div class="card-row">
+                    <div class="text-title">Traffic Challan / Fine</div>
+                    <div class="text-amount">RM 500.00</div>
+                </div>
+                <div class="card-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div class="text-subtitle">
+                        <div style="margin-bottom: 4px;">Dec 02, 2025</div>
+                        <div class="category-row">
+                            <span class="material-icons cat-icon">receipt_long</span>
+                            <span>Challan / Fine</span>
+                        </div>
+                    </div>
+                    <div class="badge rejected">Rejected</div>
+                </div>
+            </article>
+
+            <article class="expense-card item" data-status="rejected" data-type="Personal" data-month="Dec 2025"
+                data-amount="60">
+                <div class="card-row">
+                    <div class="text-title">Personal Meal</div>
+                    <div class="text-amount">RM 60.00</div>
+                </div>
+                <div class="card-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div class="text-subtitle">
+                        <div style="margin-bottom: 4px;">Dec 01, 2025</div>
+                        <div class="category-row">
+                            <span class="material-icons cat-icon">restaurant_menu</span>
+                            <span>Food</span>
+                        </div>
+                    </div>
+                    <div class="badge rejected">Rejected</div>
+                </div>
+            </article>
+
+            <!-- NOV DATA -->
+            <article class="expense-card item" data-status="approved" data-type="Toll Charges" data-month="Nov 2025"
+                data-amount="55">
+                <div class="card-row">
+                    <div class="text-title">Toll Charges - Highway</div>
+                    <div class="text-amount">RM 55.00</div>
+                </div>
+                <div class="card-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div class="text-subtitle">
+                        <div style="margin-bottom: 4px;">Nov 28, 2025</div>
+                        <div class="category-row">
+                            <span class="material-icons cat-icon">commute</span>
+                            <span>Toll</span>
+                        </div>
+                    </div>
+                    <div class="badge approved">Approved</div>
+                </div>
+            </article>
+
+            <article class="expense-card item" data-status="approved" data-type="Loading Charges" data-month="Nov 2025"
+                data-amount="200">
+                <div class="card-row">
+                    <div class="text-title">Loading @ Port</div>
+                    <div class="text-amount">RM 200.00</div>
+                </div>
+                <div class="card-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div class="text-subtitle">
+                        <div style="margin-bottom: 4px;">Nov 15, 2025</div>
+                        <div class="category-row">
+                            <span class="material-icons cat-icon">local_shipping</span>
+                            <span>Loading</span>
+                        </div>
+                    </div>
+                    <div class="badge approved">Approved</div>
+                </div>
+            </article>
+
+            <article class="expense-card item" data-status="rejected" data-type="Vehicle Repair" data-month="Nov 2025"
+                data-amount="1200">
+                <div class="card-row">
+                    <div class="text-title">Major Engine Repair</div>
+                    <div class="text-amount">RM 1,200.00</div>
+                </div>
+                <div class="card-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div class="text-subtitle">
+                        <div style="margin-bottom: 4px;">Nov 10, 2025</div>
+                        <div class="category-row">
+                            <span class="material-icons cat-icon">build</span>
+                            <span>Repair</span>
+                        </div>
+                    </div>
+                    <div class="badge rejected">Rejected</div>
+                </div>
+            </article>
+
+            <!-- OCT DATA -->
+            <article class="expense-card item" data-status="approved" data-type="Toll Charges" data-month="Oct 2025"
+                data-amount="30">
+                <div class="card-row">
+                    <div class="text-title">Toll Charges</div>
+                    <div class="text-amount">RM 30.00</div>
+                </div>
+                <div class="card-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div class="text-subtitle">
+                        <div style="margin-bottom: 4px;">Oct 22, 2025</div>
+                        <div class="category-row">
+                            <span class="material-icons cat-icon">commute</span>
+                            <span>Toll</span>
+                        </div>
+                    </div>
+                    <div class="badge approved">Approved</div>
+                </div>
+            </article>
+
+            <article class="expense-card item" data-status="approved" data-type="Unloading Charges"
+                data-month="Oct 2025" data-amount="150">
+                <div class="card-row">
+                    <div class="text-title">Unloading Service</div>
+                    <div class="text-amount">RM 150.00</div>
+                </div>
+                <div class="card-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div class="text-subtitle">
+                        <div style="margin-bottom: 4px;">Oct 05, 2025</div>
+                        <div class="category-row">
+                            <span class="material-icons cat-icon">archive</span>
+                            <span>Unloading</span>
+                        </div>
+                    </div>
+                    <div class="badge approved">Approved</div>
+                </div>
+            </article>
+
+
+        </main>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('expenseSearch');
+        const monthFilter = document.getElementById('monthFilter');
+        const items = document.querySelectorAll('.item');
+        const totalIncentiveEl = document.getElementById('totalIncentive');
+        const periodLabelEl = document.getElementById('periodLabel');
+        const valSubmitted = document.getElementById('valSubmitted');
+        const valApproved = document.getElementById('valApproved');
+        const valPending = document.getElementById('valPending');
+
+        // Hardcoded incentives per month for demo
+        const incentives = {
+            'Dec 2025': 'RM 1,250.00',
+            'Nov 2025': 'RM 980.00',
+            'Oct 2025': 'RM 1,100.00'
+        };
+
+        let currentStatus = 'all';
+
+        function calculateStats() {
+            let submitted = 0;
+            let approved = 0;
+            let pending = 0;
+
+            const query = searchInput.value.toLowerCase();
+            const selectedMonth = monthFilter.value;
+
+            items.forEach(item => {
+                const itemMonth = item.getAttribute('data-month');
+                const type = item.getAttribute('data-type').toLowerCase();
+
+                // Stats should reflect the current Month and Search query, 
+                // but NOT the selected Status Tab (so you can see totals while viewing a subset)
+                if (itemMonth === selectedMonth && type.includes(query)) {
+                    const amt = parseFloat(item.getAttribute('data-amount'));
+                    const status = item.getAttribute('data-status');
+
+                    submitted += amt;
+                    if (status === 'approved') {
+                        approved += amt;
+                    } else if (status === 'pending') {
+                        pending += amt;
+                    }
+                }
+            });
+
+            valSubmitted.textContent = 'RM ' + submitted.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            valApproved.textContent = 'RM ' + approved.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            valPending.textContent = 'RM ' + pending.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        // Separate count update to always show correct tab counts for the Selected Month
+        function updateTabCounts(month) {
+            let p = 0, a = 0, r = 0;
+            const query = searchInput.value.toLowerCase();
+
+            items.forEach(item => {
+                const itemMonth = item.getAttribute('data-month');
+                const type = item.getAttribute('data-type').toLowerCase();
+
+                // Tab counts should reflect items for the selected month AND matching the search query
+                if (itemMonth === month && type.includes(query)) {
+                    const status = item.getAttribute('data-status');
+                    if (status === 'pending') p++;
+                    if (status === 'approved') a++;
+                    if (status === 'rejected') r++;
+                }
+            });
+            document.getElementById('countPending').textContent = `(${p})`;
+            document.getElementById('countApproved').textContent = `(${a})`;
+            document.getElementById('countRejected').textContent = `(${r})`;
+        }
+
+        function filterItems() {
+            const query = searchInput.value.toLowerCase();
+            const selectedMonth = monthFilter.value;
+
+            items.forEach(item => {
+                const type = item.getAttribute('data-type').toLowerCase();
+                const status = item.getAttribute('data-status');
+                const itemMonth = item.getAttribute('data-month');
+
+                const matchesSearch = type.includes(query);
+                const matchesStatus = currentStatus === 'all' || status === currentStatus;
+                const matchesMonth = itemMonth === selectedMonth;
+
+                if (matchesSearch && matchesStatus && matchesMonth) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Update UI Context
+            totalIncentiveEl.textContent = incentives[selectedMonth];
+            periodLabelEl.textContent = selectedMonth === 'Dec 2025' ? 'Dec 01 - Dec 31' :
+                selectedMonth === 'Nov 2025' ? 'Nov 01 - Nov 30' : 'Oct 01 - Oct 31';
+
+            updateTabCounts(selectedMonth);
+            calculateStats();
+        }
+
+        function filterStatus(status, tabElement) {
+            currentStatus = status;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            tabElement.classList.add('active');
+            filterItems();
+        }
+
+        searchInput.addEventListener('input', filterItems);
+        monthFilter.addEventListener('change', filterItems);
+
+        // Init
+        filterItems();
+    </script>
+
+</body>
+
+</html>
