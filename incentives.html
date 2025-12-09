@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Incentives</title>
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Colors from Design Spec */
+            --color-primary: #1A2B48;
+            --color-accent: #2196F3;
+            --color-bg-page: #F5F5F7;
+            --color-bg-surface: #FFFFFF;
+            --color-text-primary: #212121;
+            --color-text-secondary: #757575;
+            --color-divider: #EEEEEE;
+
+            /* Status Colors */
+            --color-status-success-bg: #E8F5E9;
+            --color-status-success-text: #2E7D32;
+            --color-status-pending-bg: #E3F2FD;
+            --color-status-pending-text: #1565C0;
+            --color-status-bonus-bg: #FFF3E0;
+            --color-status-bonus-text: #E65100;
+
+            /* Spacing */
+            --spacing-unit: 8px;
+            --screen-padding: 16px;
+            --card-radius: 8px;
+        }
+
+        /* Reset & Base */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--color-bg-page);
+            color: var(--color-text-primary);
+            padding-bottom: 80px;
+        }
+
+        h1,
+        h2,
+        h3,
+        p {
+            margin: 0;
+        }
+
+        /* Typography */
+        .text-hero {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .text-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--color-text-primary);
+        }
+
+        .text-subtitle {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--color-text-secondary);
+        }
+
+        .text-label {
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .text-amount {
+            font-size: 16px;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .text-white-opacity {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .text-green {
+            color: var(--color-status-success-text);
+        }
+
+        /* Layout */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: var(--color-bg-page);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--color-bg-surface);
+            padding: 12px var(--screen-padding);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 0 var(--color-divider);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+        }
+
+        .back-btn {
+            color: var(--color-text-primary);
+            cursor: pointer;
+        }
+
+        .filter-pill {
+            background-color: #F0F0F0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--color-text-primary);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: var(--screen-padding);
+        }
+
+        .hero-card {
+            background-color: var(--color-primary);
+            border-radius: var(--card-radius);
+            padding: 24px;
+            text-align: left;
+            box-shadow: 0 4px 12px rgba(26, 43, 72, 0.15);
+            margin-bottom: 16px;
+        }
+
+        /* Summary Stats */
+        .summary-card {
+            background-color: var(--color-bg-surface);
+            border-radius: var(--card-radius);
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            margin: 0 var(--screen-padding);
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .stat-item:first-child {
+            text-align: left;
+        }
+
+        .stat-item:last-child {
+            text-align: right;
+        }
+
+        .stat-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 10%;
+            height: 80%;
+            width: 1px;
+            background-color: var(--color-divider);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--color-text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--color-text-primary);
+        }
+
+        /* Order List */
+        .list-container {
+            padding: 16px var(--screen-padding);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .order-card {
+            background-color: var(--color-bg-surface);
+            border-radius: var(--card-radius);
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid transparent;
+            transition: transform 0.1s;
+        }
+
+        .order-card:active {
+            transform: scale(0.99);
+        }
+
+        .card-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .order-id {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            font-weight: 500;
+        }
+
+        .route-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .route-icon {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        /* Badges */
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge.delivery {
+            background-color: var(--color-status-success-bg);
+            color: var(--color-status-success-text);
+        }
+
+        .badge.distance {
+            background-color: var(--color-status-pending-bg);
+            color: var(--color-status-pending-text);
+        }
+
+        .badge.bonus {
+            background-color: var(--color-status-bonus-bg);
+            color: var(--color-status-bonus-text);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--color-bg-surface);
+            box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px;
+            text-decoration: none;
+            color: var(--color-text-secondary);
+            transition: color 0.2s;
+        }
+
+        .nav-item.active {
+            color: var(--color-accent);
+        }
+
+        .nav-item .material-icons {
+            font-size: 24px;
+        }
+
+        .nav-label {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (min-width: 480px) {
+            .list-container {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+
+            .bottom-nav {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Header -->
+        <header class="header">
+            <div class="header-title-row">
+                <span class="material-icons back-btn">arrow_back</span>
+                <div class="filter-pill" style="position: relative; padding: 0; overflow: hidden;">
+                    <span class="material-icons"
+                        style="font-size: 18px; position: absolute; left: 12px; pointer-events: none;">calendar_today</span>
+                    <select id="monthFilter"
+                        style="appearance: none; -webkit-appearance: none; border: none; background: transparent; padding: 8px 32px 8px 36px; font-size: 14px; font-weight: 500; font-family: inherit; color: var(--color-text-primary); outline: none;">
+                        <option value="Dec 2025">December 2025</option>
+                        <option value="Nov 2025">November 2025</option>
+                        <option value="Oct 2025">October 2025</option>
+                    </select>
+                    <span class="material-icons"
+                        style="font-size: 16px; position: absolute; right: 8px; pointer-events: none;">arrow_drop_down</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Card -->
+        <section class="hero-section" style="padding-top: 16px;">
+            <div class="hero-card">
+                <div class="text-label text-white-opacity">Total Incentive Earned</div>
+                <div class="text-hero" id="totalIncentive">RM 2,450.00</div>
+                <div class="text-subtitle text-white-opacity" style="font-size: 12px; margin-top: 8px;">
+                    <span id="periodLabel">Dec 01 - Dec 31</span> • Branch: KUL (Kuala Lumpur)
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="stat-item">
+                    <div class="stat-label">Deliveries</div>
+                    <div class="stat-value" id="valDeliveries">12</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Distance (km)</div>
+                    <div class="stat-value" id="valDistance">850</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Bonuses</div>
+                    <div class="stat-value text-green" id="valBonuses">3</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Order List -->
+        <main class="list-container" id="orderList">
+
+            <!-- DEC DATA -->
+            <article class="order-card item" data-type="delivery" data-month="Dec 2025" data-amount="250">
+                <div class="order-id">#ORD-20251208-001</div>
+                <div class="card-row" style="margin-top: 8px;">
+                    <div class="text-title">KL → Penang</div>
+                    <div class="text-amount text-green">+RM 250.00</div>
+                </div>
+                <div class="card-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div class="text-subtitle">
+                        <div style="margin-bottom: 4px;">Dec 08, 2025</div>
+                        <div class="route-info">
+                            <span class="material-icons route-icon">local_shipping</span>
+                            <span>385 km • 4.5 hrs</span>
+                        </div>
+                    </div>
+                    <div class="badge delivery">Delivery</div>
+                </div>
+            </article>
+
+            <article class="order-card item" data-type="delivery" data-month="Dec 2025" data-amount="180">
+                <div class="order-id">#ORD-20251207-003</div>
+                <div class="card-row" style="margin-top: 8px;">
+                    <div class="text-title">KL → Ipoh</div>
+                    <div class="text-amount text-green">+RM 180.00</div>
+                </div>
+                <div class="card-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div class="text-subtitle">
+                        <div style="margin-bottom: 4px;">Dec 07, 2025</div>
+                        <div class="route-info">
+                            <span class="material-icons route-icon">local_shipping</span>
+                            <span>215 km • 2.5 hrs</span>
+                        </div>
+                    </div>
+                    <div class="badge delivery">Delivery</div>
+                </div>
+            </article>
+
+            <article class="order-card item" data-type="distance" data-month="Dec 2025" data-amount="120">
+                <div class="order-id">#INC-DIST-1208</div>
+                <div class="card-row" style="margin-top: 8px;">
+                    <div class="text-title">Distance Incentive</div>
+                    <div class="text-amount text-green">+RM 120.00</div>
+                </div>
+                <div class="card-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div class="text-subtitle">
+                        <div style="margin-bottom: 4px;">Dec 08, 2025</div>
+                        <div class="route-info">
+                            <span class="material-icons route-icon">straighten</span>
+                            <span>Weekly: 600 km target</span>
+                        </div>
+                    </div>
+                    <div class="badge distance">Distance</div>
+                </div>
+            </article>
+
+            <article class="order-card item" data-type="bonus" data-month="Dec 2025" data-amount="300">
+                <div class="order-id">#BONUS-PERF-1205</div>
+                <div class="card-row" style="margin-top: 8px;">
+                    <div class="text-title">Performance Bonus</div>
+                    <div class="text-amount text-green">+RM 300.00</div>
+                </div>
+                <div class="card-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div class="text-subtitle">
+                        <div style="margin-bottom: 4px;">Dec 05, 2025</div>
+                        <div class="route-info">
+                            <span class="material-icons route-icon">emoji_events</span>
+                            <span>10+ deliveries completed</span>
+                        </div>
+                    </div>
+                    <div class="badge bonus">Bonus</div>
+                </div>
+            </article>
+
+            <!-- NOV DATA -->
+            <article class="order-card item" data-type="delivery" data-month="Nov 2025" data-amount="220">
+                <div class="order-id">#ORD-20251128-002</div>
+                <div class="card-row" style="margin-top: 8px;">
+                    <div class="text-title">KL → Melaka</div>
+                    <div class="text-amount text-green">+RM 220.00</div>
+                </div>
+                <div class="card-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div class="text-subtitle">
+                        <div style="margin-bottom: 4px;">Nov 28, 2025</div>
+                        <div class="route-info">
+                            <span class="material-icons route-icon">local_shipping</span>
+                            <span>150 km • 2 hrs</span>
+                        </div>
+                    </div>
+                    <div class="badge delivery">Delivery</div>
+                </div>
+            </article>
+
+            <article class="order-card item" data-type="distance" data-month="Nov 2025" data-amount="100">
+                <div class="order-id">#INC-DIST-1125</div>
+                <div class="card-row" style="margin-top: 8px;">
+                    <div class="text-title">Distance Incentive</div>
+                    <div class="text-amount text-green">+RM 100.00</div>
+                </div>
+                <div class="card-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div class="text-subtitle">
+                        <div style="margin-bottom: 4px;">Nov 25, 2025</div>
+                        <div class="route-info">
+                            <span class="material-icons route-icon">straighten</span>
+                            <span>Weekly: 500 km target</span>
+                        </div>
+                    </div>
+                    <div class="badge distance">Distance</div>
+                </div>
+            </article>
+
+            <!-- OCT DATA -->
+            <article class="order-card item" data-type="delivery" data-month="Oct 2025" data-amount="195">
+                <div class="order-id">#ORD-20251022-005</div>
+                <div class="card-row" style="margin-top: 8px;">
+                    <div class="text-title">KL → Seremban</div>
+                    <div class="text-amount text-green">+RM 195.00</div>
+                </div>
+                <div class="card-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div class="text-subtitle">
+                        <div style="margin-bottom: 4px;">Oct 22, 2025</div>
+                        <div class="route-info">
+                            <span class="material-icons route-icon">local_shipping</span>
+                            <span>75 km • 1 hr</span>
+                        </div>
+                    </div>
+                    <div class="badge delivery">Delivery</div>
+                </div>
+            </article>
+
+            <article class="order-card item" data-type="bonus" data-month="Oct 2025" data-amount="250">
+                <div class="order-id">#BONUS-SAFETY-1015</div>
+                <div class="card-row" style="margin-top: 8px;">
+                    <div class="text-title">Safety Bonus</div>
+                    <div class="text-amount text-green">+RM 250.00</div>
+                </div>
+                <div class="card-row" style="align-items: flex-end; margin-bottom: 0;">
+                    <div class="text-subtitle">
+                        <div style="margin-bottom: 4px;">Oct 15, 2025</div>
+                        <div class="route-info">
+                            <span class="material-icons route-icon">verified_user</span>
+                            <span>30 days incident-free</span>
+                        </div>
+                    </div>
+                    <div class="badge bonus">Bonus</div>
+                </div>
+            </article>
+
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="incentives.html" class="nav-item active">
+                <span class="material-icons">payments</span>
+                <span class="nav-label">Incentives</span>
+            </a>
+            <a href="index.html" class="nav-item">
+                <span class="material-icons">receipt</span>
+                <span class="nav-label">Expenses</span>
+            </a>
+        </nav>
+
+    </div>
+
+    <script>
+        const monthFilter = document.getElementById('monthFilter');
+        const items = document.querySelectorAll('.item');
+        const totalIncentiveEl = document.getElementById('totalIncentive');
+        const periodLabelEl = document.getElementById('periodLabel');
+        const valDeliveries = document.getElementById('valDeliveries');
+        const valDistance = document.getElementById('valDistance');
+        const valBonuses = document.getElementById('valBonuses');
+
+        // Hardcoded totals per month
+        const monthlyData = {
+            'Dec 2025': { total: 'RM 2,450.00', deliveries: 12, distance: 850, bonuses: 3 },
+            'Nov 2025': { total: 'RM 1,890.00', deliveries: 9, distance: 720, bonuses: 2 },
+            'Oct 2025': { total: 'RM 2,120.00', deliveries: 11, distance: 795, bonuses: 2 }
+        };
+
+        function filterItems() {
+            const selectedMonth = monthFilter.value;
+            let deliveryCount = 0;
+            let distanceCount = 0;
+            let bonusCount = 0;
+
+            items.forEach(item => {
+                const itemMonth = item.getAttribute('data-month');
+                const type = item.getAttribute('data-type');
+
+                if (itemMonth === selectedMonth) {
+                    item.style.display = 'block';
+                    if (type === 'delivery') deliveryCount++;
+                    if (type === 'distance') distanceCount++;
+                    if (type === 'bonus') bonusCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Update UI
+            const data = monthlyData[selectedMonth];
+            totalIncentiveEl.textContent = data.total;
+            valDeliveries.textContent = data.deliveries;
+            valDistance.textContent = data.distance;
+            valBonuses.textContent = data.bonuses;
+
+            periodLabelEl.textContent = selectedMonth === 'Dec 2025' ? 'Dec 01 - Dec 31' :
+                selectedMonth === 'Nov 2025' ? 'Nov 01 - Nov 30' : 'Oct 01 - Oct 31';
+        }
+
+        monthFilter.addEventListener('change', filterItems);
+
+        // Init
+        filterItems();
+    </script>
+
+</body>
+
+</html>
