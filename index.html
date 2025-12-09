@@ -439,20 +439,8 @@
             </div>
         </div>
 
-        <!-- Hero Cards -->
-        <section class="hero-section" style="padding-top: 0;">
-            <div class="hero-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                    <div>
-                        <div class="text-label text-white-opacity">Total Incentive Earned</div>
-                        <div class="text-hero" id="totalIncentive">RM 1,250.00</div>
-                    </div>
-                </div>
-                <div class="text-subtitle text-white-opacity" style="font-size: 12px; margin-top: 8px;">
-                    <span id="periodLabel">Dec 01 - Dec 31</span> • Branch: KUL (Kuala Lumpur)
-                </div>
-            </div>
-
+        <!-- Hero Section -->
+        <section class="hero-section" style="padding-top: 16px;">
             <div class="summary-card">
                 <div class="stat-item">
                     <div class="stat-label">Submitted</div>
@@ -720,18 +708,9 @@
         const searchInput = document.getElementById('expenseSearch');
         const monthFilter = document.getElementById('monthFilter');
         const items = document.querySelectorAll('.item');
-        const totalIncentiveEl = document.getElementById('totalIncentive');
-        const periodLabelEl = document.getElementById('periodLabel');
         const valSubmitted = document.getElementById('valSubmitted');
         const valApproved = document.getElementById('valApproved');
         const valPending = document.getElementById('valPending');
-
-        // Hardcoded incentives per month for demo
-        const incentives = {
-            'Dec 2025': 'RM 1,250.00',
-            'Nov 2025': 'RM 980.00',
-            'Oct 2025': 'RM 1,100.00'
-        };
 
         let currentStatus = 'all';
 
@@ -808,11 +787,6 @@
                     item.style.display = 'none';
                 }
             });
-
-            // Update UI Context
-            totalIncentiveEl.textContent = incentives[selectedMonth];
-            periodLabelEl.textContent = selectedMonth === 'Dec 2025' ? 'Dec 01 - Dec 31' :
-                selectedMonth === 'Nov 2025' ? 'Nov 01 - Nov 30' : 'Oct 01 - Oct 31';
 
             updateTabCounts(selectedMonth);
             calculateStats();
