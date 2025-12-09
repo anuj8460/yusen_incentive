@@ -552,39 +552,46 @@
         const valDistance = document.getElementById('valDistance');
         const valBonuses = document.getElementById('valBonuses');
 
-        // Hardcoded totals per month
-        const monthlyData = {
-            'Dec 2025': { total: 'RM 2,450.00', deliveries: 12, distance: 850, bonuses: 3 },
-            'Nov 2025': { total: 'RM 1,890.00', deliveries: 9, distance: 720, bonuses: 2 },
-            'Oct 2025': { total: 'RM 2,120.00', deliveries: 11, distance: 795, bonuses: 2 }
-        };
-
         function filterItems() {
             const selectedMonth = monthFilter.value;
+            let totalAmount = 0;
             let deliveryCount = 0;
-            let distanceCount = 0;
+            let totalKm = 0;
             let bonusCount = 0;
 
             items.forEach(item => {
                 const itemMonth = item.getAttribute('data-month');
                 const type = item.getAttribute('data-type');
+                const amount = parseFloat(item.getAttribute('data-amount'));
 
                 if (itemMonth === selectedMonth) {
                     item.style.display = 'block';
-                    if (type === 'delivery') deliveryCount++;
-                    if (type === 'distance') distanceCount++;
+
+                    // Sum total amount
+                    totalAmount += amount;
+
+                    // Count by type
+                    if (type === 'delivery') {
+                        deliveryCount++;
+                        // Extract km from the card text
+                        const kmText = item.querySelector('.route-info span:last-child')?.textContent || '';
+                        const kmMatch = kmText.match(/(\d+)\s*km/);
+                        if (kmMatch) {
+                            totalKm += parseInt(kmMatch[1]);
+                        }
+                    }
+                    if (type === 'distance') deliveryCount++; // Distance incentives also count as deliveries
                     if (type === 'bonus') bonusCount++;
                 } else {
                     item.style.display = 'none';
                 }
             });
 
-            // Update UI
-            const data = monthlyData[selectedMonth];
-            totalIncentiveEl.textContent = data.total;
-            valDeliveries.textContent = data.deliveries;
-            valDistance.textContent = data.distance;
-            valBonuses.textContent = data.bonuses;
+            // Update UI with calculated values
+            totalIncentiveEl.textContent = 'RM ' + totalAmount.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            valDeliveries.textContent = deliveryCount;
+            valDistance.textContent = totalKm;
+            valBonuses.textContent = bonusCount;
 
             periodLabelEl.textContent = selectedMonth === 'Dec 2025' ? 'Dec 01 - Dec 31' :
                 selectedMonth === 'Nov 2025' ? 'Nov 01 - Nov 30' : 'Oct 01 - Oct 31';
