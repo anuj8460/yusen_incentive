@@ -351,6 +351,16 @@
             </div>
         </header>
 
+        <!-- Search Bar -->
+        <div style="padding: 16px var(--screen-padding) 0;">
+            <div
+                style="background: white; border-radius: 8px; padding: 10px 16px; display: flex; align-items: center; gap: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <span class="material-icons" style="color: var(--color-text-secondary);">search</span>
+                <input type="text" id="orderSearch" placeholder="Search Order Number..."
+                    style="border: none; outline: none; font-size: 14px; width: 100%; font-family: inherit;">
+            </div>
+        </div>
+
         <!-- Hero Card -->
         <section class="hero-section" style="padding-top: 16px;">
             <div class="hero-card">
@@ -545,6 +555,7 @@
 
     <script>
         const monthFilter = document.getElementById('monthFilter');
+        const orderSearch = document.getElementById('orderSearch');
         const items = document.querySelectorAll('.item');
         const totalIncentiveEl = document.getElementById('totalIncentive');
         const periodLabelEl = document.getElementById('periodLabel');
@@ -554,6 +565,7 @@
 
         function filterItems() {
             const selectedMonth = monthFilter.value;
+            const searchQuery = orderSearch.value.toLowerCase();
             let totalAmount = 0;
             let deliveryCount = 0;
             let totalKm = 0;
@@ -563,8 +575,12 @@
                 const itemMonth = item.getAttribute('data-month');
                 const type = item.getAttribute('data-type');
                 const amount = parseFloat(item.getAttribute('data-amount'));
+                const orderNumber = item.querySelector('.order-id')?.textContent.toLowerCase() || '';
 
-                if (itemMonth === selectedMonth) {
+                const matchesMonth = itemMonth === selectedMonth;
+                const matchesSearch = orderNumber.includes(searchQuery);
+
+                if (matchesMonth && matchesSearch) {
                     item.style.display = 'block';
 
                     // Sum total amount
@@ -598,6 +614,7 @@
         }
 
         monthFilter.addEventListener('change', filterItems);
+        orderSearch.addEventListener('input', filterItems);
 
         // Init
         filterItems();
